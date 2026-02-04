@@ -2,6 +2,13 @@ import sqlite3
 import json
 from datetime import datetime
 from collections import Counter
+import html as html_module
+
+def escape_html(text):
+    """Escape HTML special characters to prevent XSS"""
+    if not text:
+        return ''
+    return html_module.escape(str(text))
 
 def generate_html_report(db_path, output_path):
     """Generate a beautiful HTML report from the database"""
@@ -68,6 +75,7 @@ def generate_html_report(db_path, output_path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
     <title>Bug Bounty Security Report</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
@@ -301,7 +309,7 @@ def generate_html_report(db_path, output_path):
     for row in response_times:
         html += f"""
                         <tr>
-                            <td><span class="badge badge-info">{row['status_code']}</span></td>
+                            <td><span class="badge badge-info">{escape_html(str(row['status_code']))}</span></td>
                             <td>{row['avg_time']:.0f}ms</td>
                         </tr>
 """
@@ -332,10 +340,10 @@ def generate_html_report(db_path, output_path):
         method_class = f"method-{method.lower()}"
         html += f"""
                         <tr>
-                            <td><span class="endpoint-method {method_class}">{method}</span></td>
-                            <td><code>{endpoint['url']}</code></td>
-                            <td><span class="badge badge-success">{endpoint['source']}</span></td>
-                            <td>{endpoint['discovered_at'][:10]}</td>
+                            <td><span class="endpoint-method {method_class}">{escape_html(method)}</span></td>
+                            <td><code>{escape_html(endpoint['url'])}</code></td>
+                            <td><span class="badge badge-success">{escape_html(endpoint['source'])}</span></td>
+                            <td>{escape_html(endpoint['discovered_at'][:10])}</td>
                         </tr>
 """
     
@@ -373,10 +381,10 @@ def generate_html_report(db_path, output_path):
             severity_class = f"severity-{finding['severity'].lower()}"
             html += f"""
                         <tr>
-                            <td><span class="{severity_class}">{finding['severity'].upper()}</span></td>
-                            <td>{finding['title']}</td>
-                            <td>{finding['description']}</td>
-                            <td><code>{finding['url']}</code></td>
+                            <td><span class="{severity_class}">{escape_html(finding['severity'].upper())}</span></td>
+                            <td>{escape_html(finding['title'])}</td>
+                            <td>{escape_html(finding['description'])}</td>
+                            <td><code>{escape_html(finding['url'])}</code></td>
                         </tr>
 """
         
@@ -404,7 +412,7 @@ def generate_html_report(db_path, output_path):
     for url_data in top_urls:
         html += f"""
                         <tr>
-                            <td><code>{url_data['url']}</code></td>
+                            <td><code>{escape_html(url_data['url'])}</code></td>
                             <td><span class="badge badge-info">{url_data['count']} requests</span></td>
                         </tr>
 """
