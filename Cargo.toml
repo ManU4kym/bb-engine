@@ -1,0 +1,72 @@
+[package]
+name = "bb-engine"
+version = "0.1.0"
+edition = "2024"
+authors = ["Immanuel <info@mannykimani.com>"]
+description = "Bug Bounty Automation Engine"
+license = "MIT"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json", "cookies", "gzip"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# CLI
+clap = { version = "4.4", features = ["derive", "cargo"] }
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Regex
+regex = "1.10"
+
+# Database
+rusqlite = { version = "0.30", features = ["bundled"] }
+
+# URL parsing
+url = "2.5"
+
+# HTML parsing
+scraper = "0.18"
+
+# JSON path queries
+jsonpath_lib = "0.3"
+
+# For rate limiting
+governor = "0.6"
+
+# UUID generation
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Datetime
+chrono = { version = "0.4", features = ["serde"] }
+
+# For fuzzing payloads
+rand = "0.8"
+
+# For similarity detection
+strsim = "0.11"
+
+[dev-dependencies]
+mockito = "1.2"
+
+[[bin]]
+name = "bb-engine"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
