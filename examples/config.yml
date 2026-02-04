@@ -1,0 +1,44 @@
+http:
+  max_concurrent: 10
+  timeout: 30
+  rate_limit: 10
+  headers:
+    - ["Authorization", "Bearer YOUR_TOKEN_HERE"]
+    - ["X-Custom-Header", "value"]
+  user_agent: "bb-engine/0.1.0"
+  follow_redirects: true
+  max_redirects: 5
+
+discovery:
+  extensions:
+    - php
+    - asp
+    - aspx
+    - jsp
+    - json
+    - xml
+    - html
+  ignore_dirs:
+    - node_modules
+    - .git
+    - vendor
+    - dist
+  success_codes:
+    - 200
+    - 201
+    - 202
+    - 204
+    - 301
+    - 302
+    - 307
+    - 308
+
+fuzzing:
+  auto_generate: true
+  payloads_per_param: 50
+  delay_ms: 100
+  similarity_threshold: 0.85
+
+storage:
+  db_path: "bb-engine.db"
+  auto_save_interval: 60

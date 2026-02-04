@@ -1,0 +1,110 @@
+patterns:
+  - name: "AWS Access Key"
+    description: "AWS access key detected in response"
+    regex: "AKIA[0-9A-Z]{16}"
+    severity: Critical
+    match_type: Body
+    context_lines: 2
+
+  - name: "AWS Secret Key"
+    description: "AWS secret key detected in response"
+    regex: "(?i)aws(.{0,20})?['\"][0-9a-zA-Z/+]{40}['\"]"
+    severity: Critical
+    match_type: Body
+    context_lines: 2
+
+  - name: "Private Key"
+    description: "Private key found in response"
+    regex: "-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"
+    severity: Critical
+    match_type: Body
+    context_lines: 5
+
+  - name: "JWT Token"
+    description: "JWT token detected"
+    regex: "eyJ[A-Za-z0-9_-]*\\.eyJ[A-Za-z0-9_-]*\\.[A-Za-z0-9_-]*"
+    severity: Medium
+    match_type: Both
+    context_lines: 1
+
+  - name: "SQL Error - MySQL"
+    description: "MySQL error message indicating potential SQL injection"
+    regex: "(SQL syntax.*?MySQL|Warning.*?mysql_|MySQLSyntaxErrorException)"
+    severity: High
+    match_type: Body
+    context_lines: 3
+
+  - name: "SQL Error - PostgreSQL"
+    description: "PostgreSQL error message"
+    regex: "(PostgreSQL.*?ERROR|PG::SyntaxError)"
+    severity: High
+    match_type: Body
+    context_lines: 3
+
+  - name: "Stack Trace - Java"
+    description: "Java stack trace in response"
+    regex: "at\\s+[\\w\\.\\$]+\\([^\\)]+\\)"
+    severity: Medium
+    match_type: Body
+    context_lines: 5
+
+  - name: "Stack Trace - Python"
+    description: "Python stack trace in response"
+    regex: "Traceback \\(most recent call last\\)"
+    severity: Medium
+    match_type: Body
+    context_lines: 5
+
+  - name: "Generic API Key"
+    description: "Generic API key pattern detected"
+    regex: "(?i)(api[_-]?key|apikey|access[_-]?token)['\": \\s=]+(['\"][a-zA-Z0-9_\\-]{20,}['\"]|[a-zA-Z0-9_\\-]{20,})"
+    severity: High
+    match_type: Body
+    context_lines: 1
+
+  - name: "GitHub Token"
+    description: "GitHub personal access token"
+    regex: "ghp_[0-9a-zA-Z]{36}"
+    severity: Critical
+    match_type: Body
+    context_lines: 1
+
+  - name: "Slack Token"
+    description: "Slack API token"
+    regex: "xox[baprs]-[0-9]{10,13}-[0-9]{10,13}-[a-zA-Z0-9]{24}"
+    severity: Critical
+    match_type: Body
+    context_lines: 1
+
+  - name: "Email Address"
+    description: "Email address found in response"
+    regex: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    severity: Low
+    match_type: Body
+
+  - name: "IP Address"
+    description: "IPv4 address found in response"
+    regex: "\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"
+    severity: Info
+    match_type: Body
+
+  - name: "Password in URL"
+    description: "Password parameter in URL"
+    regex: "(?i)(password|passwd|pwd)=[^&\\s]+"
+    severity: High
+    match_type: Request
+    context_lines: 1
+
+  - name: "Debug Mode Enabled"
+    description: "Debug mode appears to be enabled"
+    regex: "(?i)(debug[= ]true|debug[= ]1|DEBUG_MODE[= ]true)"
+    severity: Medium
+    match_type: Body
+    context_lines: 2
+
+  - name: "Internal Path Disclosure"
+    description: "Internal file system path disclosed"
+    regex: "([A-Z]:\\\\|/home/|/var/www/|/usr/|C:\\\\Windows)"
+    severity: Low
+    match_type: Body
+    context_lines: 1

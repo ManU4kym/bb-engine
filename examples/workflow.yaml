@@ -1,0 +1,40 @@
+name: "Full Security Assessment"
+description: "Complete automated security assessment with endpoint discovery, multiple fuzzing modes, and pattern matching"
+
+stages:
+  - name: "Endpoint Discovery"
+    stage_type:
+      type: Discovery
+    config:
+      wordlist: "examples/wordlist.txt"
+      max_depth: 3
+
+  - name: "SQL Injection Fuzzing"
+    stage_type:
+      type: Fuzzing
+    config:
+      fuzzing_mode: "sqli"
+
+  - name: "XSS Fuzzing"
+    stage_type:
+      type: Fuzzing
+    config:
+      fuzzing_mode: "xss"
+
+  - name: "IDOR Fuzzing"
+    stage_type:
+      type: Fuzzing
+    config:
+      fuzzing_mode: "idor"
+
+  - name: "LFI Fuzzing"
+    stage_type:
+      type: Fuzzing
+    config:
+      fuzzing_mode: "lfi"
+
+  - name: "Pattern Matching"
+    stage_type:
+      type: PatternMatching
+    config:
+      pattern_file: "examples/patterns.yml"
